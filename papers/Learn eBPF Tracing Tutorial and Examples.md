@@ -80,3 +80,83 @@ eBPF 对于 Linux 而言相当于 JavaScript 对于 HTML 的作用, 即相比于
 
 不过目前还欠缺的是在生产环境中的一些示例。因为这些 blog 绝大多数是我在 eBPF 刚诞生不久，我们并没在生产环境中运行而只在测试实例上跑，所以大部分示例都是在一定场景下构造的。不久后也许我们会再新加些生产环境的示例，而这部分也需要大家的帮助，比如当你使用一个 eBPF 工具解决了某些生产环境问题时, 可以考虑留些现场和截图，并且提些 PR 加到示例文件中。
 
+###稍有经验
+
+这一章节的假设读者应该都已经使用过 `bcc` 及其他各种相关工具了, 如果你对二次开发 eBPF 工具感兴趣的话, 那么最佳的入手点就在于先尝试从 `bcc` 切换到 `bpftrace` , 这是一个更高级更易入门的语言。但 `bpftrace` 也有不足之处, 它不像 `bcc` 那样支持自定化, 所以大概率你可能最终使用完仍然会切换回 `bcc`
+
+想要深入了解 `bpftrace` 的话可以参考[这篇文章](https://github.com/iovisor/bpftrace/blob/master/INSTALL.md) , 这是一个相对较新的项目, 所以在我写这篇文章时可能这个工具并没有被成熟的引入各个 Linux 包管理系统，不过在未来，应该可能通过类似 `apt-get install bpftrace` 或类似的方式来安装, 目前只能通过编译源码包安装。
+
+#### 1. bpftrace 教程
+
+我也写了另一个教程会教你如何通过单行命令玩转 bpftrace
+
+- [bpftrace One-Liners Tutorial](https://github.com/iovisor/bpftrace/blob/master/docs/tutorial_one_liners.md)
+
+这个教程分为 12 章节来逐步叫你学习 `bpftrace` ， 一个简单示例如下:
+
+![image-20200112172025509](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112172025509.png)
+
+这句命令会找出所有打开系统调用追踪点的 PID 和文件路径
+
+#### 2. bpftrace 参考指南
+
+想了解更多有关 bpftrace 的话，可以参考我的这篇文章
+
+- [bpftrace Reference Guide](https://github.com/iovisor/bpftrace/blob/master/docs/reference_guide.md)
+
+你可以从中了解到有关 bpftrace 语法，探针和一些内置组件。
+
+#### 3. bpftrace 示例
+
+bpftrace repo 中有近 20 个工具，你可以简单参考
+
+- [bpftrace Tools](https://github.com/iovisor/bpftrace/tree/master/tools)
+
+比如其中用于追踪 block I/O 时延的脚本
+
+![image-20200112172931029](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112172931029.png)
+
+如同 `bcc`, 这些工具也有详尽的 man pages 和示例, 比如 [biolatency_example.txt](https://github.com/iovisor/bpftrace/blob/master/tools/biolatency_example.txt)
+
+### 老鸟
+
+#### 1. 开发 bcc
+
+这儿是我整理的一些关于开发及二次开发 `bcc` 的相关文档:
+
+- [bcc Python Developer Tutorial](https://github.com/iovisor/bcc/blob/master/docs/tutorial_bcc_python_developer.md)
+- [bcc Reference Guide](https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md)
+
+在 `bcc/tools/` 目录下有很多 `*.py` 文件可供学习, 这些 py 文件大约可以分成两部分:
+
+- BPF 内核 C 代码的 Python 实现(或 lua, C++ 实现)
+- Python 的一些 BPF 用户态工具
+
+开发 bcc 工具确实是需要成熟的技术的，因为这可能会涉及到一些细碎的内核问题或应用底层问题
+
+#### 2. 提贡献
+
+我们非常欢迎以下贡献
+
+- 提交 bcc issues
+- 提交 bpftrace issues
+
+对于 bpftrace, 有个 [bpftrace Internals Development Guide](https://github.com/iovisor/bpftrace/blob/master/docs/internals_development.md) 教程, 如果你正在写些 llvm IR 的代码, 那么这部分的开发对你是个挺大的挑战......
+
+当然, 提贡献这部分也可以涉及内核 eBPF (aka BPF) 的引擎。
+
+如果你浏览过 `bcc` 和 `bpftrace` 的 issues 的话, 你会看到很多优化相关的请求，诸如  [bpftrace kernel tag](https://github.com/iovisor/bpftrace/issues?q=is%3Aissue+is%3Aopen+label%3Akernel) 等等。此外，持续关注 [netdev](https://www.spinics.net/lists/netdev/)  邮件列表来料及到最新的内核 BPF 开发也是需要做的，这部分通常有些会在下一个 release 中 merge 到 Linux 主分支上。
+
+此外，除了编写代码，你也可以写些测试，包构建，博客或者演讲分享来帮助我们。
+
+### 总结
+
+eBPF 确实做了很多事情。在这篇文章里我只是简单介绍了如何学习 eBPF 性能分析和追踪，总的来说是以下内容
+
+- 初学者: 把 `bcc` 工具跑起来
+- 稍有经验: 开发 `bpftrace` 工具
+- 老鸟: 开发 `bcc` 工具, 对 `bcc` & `bpftrace` 做贡献
+
+同时在这个页面 **[eBPF Tracing Tools](http://www.brendangregg.com/ebpf.html)**  有这篇文章更详细的内容, 其中涉及细节较多, 感兴趣的话可以仔细阅读。
+
+祝你好运！
