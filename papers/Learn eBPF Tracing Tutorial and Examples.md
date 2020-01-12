@@ -38,7 +38,7 @@ eBPF 对于 Linux 而言相当于 JavaScript 对于 HTML 的作用, 即相比于
 
 `tcplife` 可以展示出完整生命周期的 TCP sessions, 并且可以看到进程 id (PID), 进程命令名 (COMM), 发送和接受的字节数以及 TCP 连接的持续时间 (单位是 ms), 如图:
 
-![image-20200112151502737](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112151502737.png)
+![image-20200112151502737](https://blog-1251445337.cos.ap-chengdu.myqcloud.com/ebpf-5.png)
 
 需要注意的是 eBPF 并没有开放给用户可以通过旧的内核技术来重写 TCP 生命周期的入口，不过假如哪天开放了, 这样的入口也会带来一些性能上的额外开销,一些内核安全问题等等,所以我们永远不会使用这样的工具。eBPF 给工具带来的特性应该是可实践的, 便捷的，安全的。拿 `tcplife` 举个例子, 它并不会追踪每一个包, 这样会带来很多额外的开销，相反的，eBPF 只会追踪 TCP 生命周期的事件, 这些时间并不会这么频繁, 从而给系统带来的开销会低得多, 我们也可以从容地让这个工具 7x24 小时地在生产环境运行。
 
@@ -48,7 +48,7 @@ eBPF 对于 Linux 而言相当于 JavaScript 对于 HTML 的作用, 即相比于
 
 在 Ubuntu 系统上, 可以简单地这么安装
 
-![image-20200112154032819](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112154032819.png)
+![image-20200112154032819](https://blog-1251445337.cos.ap-chengdu.myqcloud.com/ebpf-4.png)
 
 我呢是通过运行 `opensnoop` 来测试 `bcc` 是否 work 的, 所以如果你也这么搞过, 那么恭喜你, 你也用过 eBPF 啦！
 
@@ -74,7 +74,7 @@ eBPF 对于 Linux 而言相当于 JavaScript 对于 HTML 的作用, 即相比于
 
 一旦上述内容你都尝试过后, 你可能就会有了一个全局性的概念:
 
-![image-20200112155332639](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112155332639.png)
+![image-20200112155332639](https://blog-1251445337.cos.ap-chengdu.myqcloud.com/ebpf-3.png)
 
 网上已经有过很多较为完整的 man pages 和示例来介绍这十一个趴(part)了。在官方 repo (bcc/tools) 中的示例文件 `*_example.txt` 展示了上述概念的具体释义，比如 [biolatency_example.txt](https://github.com/iovisor/bcc/blob/master/tools/biolatency_example.txt). 中你可以了解到如何用 bcc 来追踪 block I/O 时延, repo 中也有很多我写的示例文件, man pages 和具体工具，满打满算估摸着有 50 多篇 blog 了吧
 
@@ -94,7 +94,7 @@ eBPF 对于 Linux 而言相当于 JavaScript 对于 HTML 的作用, 即相比于
 
 这个教程分为 12 章节来逐步叫你学习 `bpftrace` ， 一个简单示例如下:
 
-![image-20200112172025509](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112172025509.png)
+![image-20200112172025509](https://blog-1251445337.cos.ap-chengdu.myqcloud.com/ebpf-2.png)
 
 这句命令会找出所有打开系统调用追踪点的 PID 和文件路径
 
@@ -114,7 +114,7 @@ bpftrace repo 中有近 20 个工具，你可以简单参考
 
 比如其中用于追踪 block I/O 时延的脚本
 
-![image-20200112172931029](/Users/thehackercat/Library/Application Support/typora-user-images/image-20200112172931029.png)
+![image-20200112172931029](https://blog-1251445337.cos.ap-chengdu.myqcloud.com/ebpf-1.png)
 
 如同 `bcc`, 这些工具也有详尽的 man pages 和示例, 比如 [biolatency_example.txt](https://github.com/iovisor/bpftrace/blob/master/tools/biolatency_example.txt)
 
